@@ -351,3 +351,169 @@
 
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Monetização TikTok</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .btn {
+            background-color: #1DBF73;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #17a65d;
+        }
+        .coins {
+            margin-top: 20px;
+        }
+        .profile-photo {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header div {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="coins">
+            <span><strong>Moedas:</strong> <span id="coinBalance">50</span></span>
+        </div>
+        <div>
+            <img src="profile.jpg" alt="Profile" class="profile-photo" id="userProfilePhoto">
+            <button class="btn" onclick="logout()">Sair</button>
+        </div>
+    </div>
+
+    <h2>Usuários</h2>
+    <div id="usersList">
+        <!-- Lista de usuários será inserida aqui -->
+    </div>
+
+    <div id="addLinkContainer" style="display: none;">
+        <h3>Adicionar seu Link TikTok</h3>
+        <input type="url" id="userTikTokLink" placeholder="Cole o link do seu perfil/vídeo" style="width: 100%; padding: 10px; border-radius: 5px;">
+        <button class="btn" onclick="addLink()">Adicionar Link</button>
+    </div>
+</div>
+
+<script>
+    let coins = 50; // Moedas iniciais
+    let currentUser = "Usuário Exemplo"; // Nome fictício de usuário para testes
+
+    // Dados fictícios de usuários com links de TikTok
+    const users = [
+        { username: "User1", tikTokLink: "https://www.tiktok.com/@user1" },
+        { username: "User2", tikTokLink: "https://www.tiktok.com/@user2" },
+        { username: "User3", tikTokLink: "https://www.tiktok.com/@user3" }
+    ];
+
+    // Função para atualizar o saldo de moedas
+    function updateCoins() {
+        document.getElementById("coinBalance").innerText = coins;
+    }
+
+    // Exibir lista de usuários
+    function showUsers() {
+        let usersList = document.getElementById("usersList");
+        usersList.innerHTML = ""; // Limpar lista existente
+        users.forEach(user => {
+            let userDiv = document.createElement("div");
+            userDiv.innerHTML = `
+                <p>${user.username}</p>
+                <button class="btn" onclick="followUser('${user.username}', '${user.tikTokLink}')">Seguir</button>
+                <button class="btn" onclick="likeUser('${user.username}', '${user.tikTokLink}')">Curtir</button>
+            `;
+            usersList.appendChild(userDiv);
+        });
+    }
+
+    // Função para seguir o usuário e redirecionar para o link do TikTok
+    function followUser(username, tikTokLink) {
+        if (coins >= 10) {
+            coins += 10; // Ganho de 10 moedas ao seguir
+            updateCoins();
+            alert(`Você seguiu o usuário ${username}!`);
+            window.location.href = tikTokLink; // Redireciona para o link do TikTok do usuário
+        } else {
+            alert("Você precisa de 10 moedas para seguir.");
+        }
+    }
+
+    // Função para curtir o usuário e redirecionar para o link do TikTok
+    function likeUser(username, tikTokLink) {
+        if (coins >= 5) {
+            coins += 5; // Ganho de 5 moedas ao curtir
+            updateCoins();
+            alert(`Você curtiu o usuário ${username}!`);
+            window.location.href = tikTokLink; // Redireciona para o link do TikTok do usuário
+        } else {
+            alert("Você precisa de 5 moedas para curtir.");
+        }
+    }
+
+    // Função para adicionar o link TikTok
+    function addLink() {
+        const link = document.getElementById("userTikTokLink").value;
+        if (coins >= 50) {
+            alert("Link adicionado com sucesso!");
+            document.getElementById("addLinkContainer").style.display = "none";
+            // Adicionaria o link ao banco de dados do usuário (não implementado aqui)
+        } else {
+            alert("Você precisa de 50 moedas para adicionar um link.");
+        }
+    }
+
+    // Função para logout
+    function logout() {
+        alert("Você saiu da conta.");
+        window.location.href = "index.html"; // Volta para a página inicial
+    }
+
+    // Inicialização da página
+    window.onload = function() {
+        updateCoins();
+        showUsers();
+    };
+</script>
+
+</body>
+</html>
