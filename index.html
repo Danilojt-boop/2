@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monetização TikTok</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"], input[type="password"], input[type="email"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .message {
+            text-align: center;
+            color: red;
+        }
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .links a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Login e Registro</h1>
+
+    <!-- Formulário de Registro -->
+    <div id="register-section">
+        <h3>Registrar-se</h3>
+        <input type="text" id="register-username" placeholder="Nome de usuário" />
+        <input type="email" id="register-email" placeholder="E-mail" />
+        <input type="password" id="register-password" placeholder="Senha" />
+        <button onclick="register()">Registrar</button>
+    </div>
+
+    <!-- Formulário de Login -->
+    <div id="login-section" style="display:none;">
+        <h3>Já tem uma conta? Faça login</h3>
+        <input type="text" id="login-username" placeholder="Nome de usuário" />
+        <input type="password" id="login-password" placeholder="Senha" />
+        <button onclick="login()">Entrar</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <div class="links">
+        <p id="switch-link"><a href="javascript:void(0);" onclick="toggleForms()">Ainda não tem uma conta? Registre-se</a></p>
+    </div>
+</div>
+
+<script>
+    // Função para registrar o usuário
+    function register() {
+        let username = document.getElementById("register-username").value;
+        let email = document.getElementById("register-email").value;
+        let password = document.getElementById("register-password").value;
+
+        if (username === "" || email === "" || password === "") {
+            document.getElementById("message").innerHTML = "Por favor, preencha todos os campos.";
+            return;
+        }
+
+        // Verifica se o usuário já existe
+        if (localStorage.getItem(username)) {
+            document.getElementById("message").innerHTML = "Usuário já existe. Tente um nome de usuário diferente.";
+            return;
+        }
+
+        let user = { username, email, password, coins: 50, tiktokLink: "" }; // Moedas de bônus ao se registrar
+        localStorage.setItem(username, JSON.stringify(user));
+        document.getElementById("message").innerHTML = `Usuário ${username} registrado com sucesso!`;
+        document.getElementById("register-username").value = '';
+        document.getElementById("register-email").value = '';
+        document.getElementById("register-password").value = '';
+    }
+
+    // Função de login
+    function login() {
+        let username = document.getElementById("login-username").value;
+        let password = document.getElementById("login-password").value;
+
+        if (username === "" || password === "") {
+            document.getElementById("message").innerHTML = "Por favor, preencha todos os campos.";
+            return;
+        }
+
+        let user = JSON.parse(localStorage.getItem(username));
+
+        if (user && user.password === password) {
+            // Salva o usuário logado
+            localStorage.setItem("currentUser", username);
+            window.location.href = "perfil.html"; // Redireciona para a página do perfil
+        } else {
+            document.getElementById("message").innerHTML = "Nome de usuário ou senha incorretos.";
+        }
+    }
+
+    // Alterna entre os formulários de login e registro
+    function toggleForms() {
+        let registerSection = document.getElementById("register-section");
+        let loginSection = document.getElementById("login-section");
+        let switchLink = document.getElementById("switch-link");
+
+        if (registerSection.style.display === "none") {
+            registerSection.style.display = "block";
+            loginSection.style.display = "none";
+            switchLink.innerHTML = '<a href="javascript:void(0);" onclick="toggleForms()">Já tem uma conta? Faça login</a>';
+        } else {
+            registerSection.style.display = "none";
+            loginSection.style.display = "block";
+            switchLink.innerHTML = '<a href="javascript:void(0);" onclick="toggleForms()">Ainda não tem uma conta? Registre-se</a>';
+        }
+    }
+
+    window.onload = function() {
+        toggleForms();
+    };
+</script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .coins {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+            color: #4CAF50;
+        }
+        .profile-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .profile-container input {
+            padding: 10px;
+            margin: 10px;
+            width: 80%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .profile-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .profile-container button:hover {
+            background-color: #45a049;
+        }
+        .logout {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .logout img {
+            width: 30px;
+            cursor: pointer;
+        }
+        .users-list {
+            margin-top: 20px;
+        }
+        .user {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="coins" id="coins-display">Moedas: 50</div>
+
+<div class="container">
+    <h1>Bem-vindo ao seu perfil!</h1>
+    <div class="profile-container">
+        <h3>Adicionar link do TikTok</h3>
+        <input type="text" id="tiktok-link" placeholder="Cole seu link do TikTok" />
+        <button id="add-link-btn" onclick="addLink()" disabled>Adicionar Link</button>
+    </div>
+
+    <div class="users-list">
+        <h3>Usuários para seguir e curtir</h3>
+        <!-- Aqui será gerada a lista de usuários para curtir e seguir -->
+        <div id="user-list-container"></div>
+    </div>
+
+    <div class="logout">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Logout_icon_2.svg" alt="Logout" onclick="logout()" />
+    </div>
+</div>
+
+<script>
+    let coins = 50; // Moedas iniciais de bônus
+    let username = localStorage.getItem("currentUser");
+    let userData = JSON.parse(localStorage.getItem(username));
+    let tiktokLink = userData.tiktokLink || ''; // Link do TikTok do usuário
+
+    // Exibe o saldo de moedas
+    function updateCoins() {
+        document.getElementById("coins-display").innerText = `Moedas: ${coins}`;
+    }
+
+    // Inicializa a página
+    function showProfile() {
+        if (!username) {
+            window.location.href = "index.html"; // Redireciona para login caso o usuário não esteja logado
+        }
+
+        // Exibe as moedas do usuário
+        updateCoins();
+        
+        // Habilita o botão de adicionar link apenas se o usuário tiver 50 moedas
+        if (coins >= 50) {
+            document.getElementById("add-link-btn").disabled = false;
+        } else {
+            document.getElementById("add-link-btn").disabled = true;
+        }
+
+        // Preenche o campo do link de TikTok com o link atual do usuário
+        if (tiktokLink) {
+            document.getElementById("tiktok-link").value = tiktokLink;
+        }
+
+        // Exibe a lista de usuários para seguir/curtir
+        loadUserList();
+    }
+
+    // Adiciona o link do TikTok
+    function addLink() {
+        let tiktokLink = document.getElementById("tiktok-link").value;
+        if (tiktokLink === "") {
+            alert("Por favor, insira um link válido.");
+            return;
+        }
+
+        // Armazena o link do TikTok no perfil do usuário
+        userData.tiktokLink = tiktokLink;
+        localStorage.setItem(username, JSON.stringify(userData));
+
+        alert("Link do TikTok adicionado com sucesso!");
+    }
+
+    // Carrega a lista de usuários
+    function loadUserList() {
+        let allUsers = Object.keys(localStorage);
+        let userListContainer = document.getElementById("user-list-container");
+        userListContainer.innerHTML = ''; // Limpa a lista antes de adicionar
+
+        allUsers.forEach(userKey => {
+            if (userKey !== username) { // Não mostrar o próprio usuário
+                let user = JSON.parse(localStorage.getItem(userKey));
+                let userDiv = document.createElement("div");
+                userDiv.classList.add("user");
+                userDiv.innerHTML = `
+                    <p><strong>${user.username}</strong></p>
+                    <button onclick="followUser('${user.username}')">Seguir</button>
+                    <button onclick="likeUser('${user.username}')">Curtir</button>
+                `;
+                userListContainer.appendChild(userDiv);
+            }
+        });
+    }
+
+    // Função para seguir um usuário
+    function followUser(userName) {
+        coins += 10; // Ganha 10 moedas por seguir
+        updateCoins();
+        alert(`Você seguiu o usuário ${userName}`);
+    }
+
+    // Função para curtir um usuário
+    function likeUser(userName) {
+        coins += 5; // Ganha 5 moedas por curtir
+        updateCoins();
+        alert(`Você curtiu o usuário ${userName}`);
+    }
+
+    // Função de logout
+    function logout() {
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+    }
+
+    window.onload = function() {
+        showProfile();
+    };
+</script>
+
+</body>
+</html>
